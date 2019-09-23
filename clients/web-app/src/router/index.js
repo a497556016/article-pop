@@ -8,7 +8,7 @@ import store from "../store";
 const router = new VueRouter({
     routes,
     /*scrollBehavior (to, from, savedPosition) {
-        console.log(from.path, document.scrollingElement.scrollTop)
+        console.log(from, document.scrollingElement.scrollTop)
         if (savedPosition) {
             return savedPosition
         } else {

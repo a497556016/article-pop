@@ -1,0 +1,21 @@
+server:
+  port: 8082
+  max-http-header-size: 102400
+
+spring:
+  application:
+    name: web-crawler-article
+  data:
+    mongodb:
+      uri: mongodb://192.168.0.45:27017/article
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB

@@ -1,0 +1,44 @@
+@import "../../color";
+
+.he-article-list{
+  .he-article-title{
+    font-weight: bold;
+    font-size: 1em;
+    color: @text-color;
+  }
+  .he-article-content{
+    display: inline-block;
+
+    font-size: 0.8em;
+    color: @text-second-color;
+    margin: 5px 0 15px 0;
+    .img {
+      height: 60px;
+      img{
+        height: 100%;
+        max-width: 100%;
+      }
+    }
+    .text {
+      padding: 0 5px;
+      max-height: 5em;
+      line-height: 2.5em;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+  }
+  .he-article-footer{
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6em;
+    color: @text-third-color;
+    .l{
+
+    }
+    .r{
+
+    }
+  }
+}

@@ -1,5 +1,7 @@
-const moduleTypes = {
+import * as article from "./article/types"
 
+const moduleTypes = {
+    article
 }
 
 for (let module in moduleTypes) {
