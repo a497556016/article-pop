@@ -4,7 +4,7 @@
         <he-scroll-nav-bar style="position: fixed;top: 4em;left: 0.5em;right: 0.5em;z-index: 999;" :data="tagsData" :active-index="1" @change="onTagsChange"></he-scroll-nav-bar>
         <div ref="body" class="body">
             <he-panel style="margin-top: 10px">
-                <he-article-list :data="recommendList" :options="{imagePosition: 'left'}" @itemClick="onItemClick">
+                <he-article-list :data="recommendList" :options="{imagePosition: 'left', loadMore: haveMore, loadingBarPosition: 5}" @loadMore="loadMore" @itemClick="onItemClick">
                     <div slot="footer-left" slot-scope="{metadata}">
                         <span v-if="metadata.source">来源：{{metadata.source}} </span>
                         <span v-if="metadata.chineseTag">标签：{{metadata.chineseTag}}</span>
@@ -13,7 +13,7 @@
                         {{metadata.date}}
                     </div>
                 </he-article-list>
-                <div class="load-more" v-if="haveMore" @click="loadMore" align="center">加载更多</div>
+<!--                <div class="load-more" v-if="haveMore" @click="loadMore" align="center">加载更多</div>-->
             </he-panel>
         </div>
     </div>
@@ -60,7 +60,7 @@
         methods: {
             ...mapActions({
                 selectRecommendList: moduleTypes.article.SELECT_RECOMMEND_PAGE_DATA,
-                loadMore: moduleTypes.article.SELECT_NEXT_RECOMMEND_PAGE_DATA
+                loadNextPage: moduleTypes.article.SELECT_NEXT_RECOMMEND_PAGE_DATA
             }),
             onTagsChange(item, index){
                 console.log(item, index)
@@ -70,6 +70,10 @@
                 this.$router.push({
                     path: '/article/'+article.metadata.id
                 })
+            },
+            async loadMore(){
+                await this.loadNextPage();
+                this.$refs.body.scrollTo(0, 0);
             }
         }
     }

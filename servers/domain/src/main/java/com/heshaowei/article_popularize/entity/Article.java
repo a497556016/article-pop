@@ -25,6 +25,7 @@ public class Article {
     private Date date;
     private String tag;
     private String chineseTag;
+    private long commentsCount;
     private Date lastModified;
 
     @Data

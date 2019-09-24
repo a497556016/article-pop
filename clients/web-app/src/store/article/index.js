@@ -1,21 +1,27 @@
 import * as types from "./types";
+import moment from "moment";
 
 import articleApi from "../../api/article"
 
 const state = {
-    recommendPage: {},
+    resultPage: {},
+    loadMore: {
+        haveMore: false,
+        lastTime: null,
+        position: 0
+    },
     viewArticleData: {}
 }
 
 const getters = {
     [types.HAVE_MORE_PAGES] (state){
-        return !state.recommendPage.last;
+        return state.loadMore;
     },
     [types.GET_RECOMMEND_LIST](state){
-        if(!state.recommendPage.content){
+        if(!state.resultPage.content){
             return [];
         }
-        return state.recommendPage.content.map(item => {
+        return state.resultPage.content.map(item => {
             return {
                 title: item.title,
                 content: item.abstractText,
@@ -34,13 +40,24 @@ const mutations = {}
 const actions = {
     async [types.SELECT_RECOMMEND_PAGE_DATA]({state}){
         const page = await articleApi.selectRecommendList(0);
-        state.recommendPage = page;
+        state.resultPage = page;
+        state.loadMore = {
+            haveMore: !page.last,
+            lastTime: moment().format('HH:mm:ss'),
+            position: page.content.length-1
+        }
     },
     async [types.SELECT_NEXT_RECOMMEND_PAGE_DATA]({state}){
-        const page = await articleApi.selectRecommendList(state.recommendPage.pageable.pageNumber+1);
-        const content = [].concat(...state.recommendPage.content).concat(...page.content);
+        const page = await articleApi.selectRecommendList(state.resultPage.pageable.pageNumber+1);
+        state.loadMore = {
+            haveMore: !page.last,
+            lastTime: moment().format('HH:mm:ss'),
+            position: page.content.length-1
+        }
+        const content = [].concat(...page.content).concat(...state.resultPage.content);
         page.content = content;
-        state.recommendPage = page;
+        state.resultPage = page;
+
     },
     async [types.FIND_ARTICLE_BY_ID]({state}, id){
         const article = await articleApi.getById(id);
