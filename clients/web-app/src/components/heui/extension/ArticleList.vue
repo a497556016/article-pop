@@ -31,8 +31,10 @@
 </template>
 
 <script>
+    import List from "../base/List";
     export default {
         name: "ArticleList",
+        components: {'he-list': List},
         props: {
             data: {
                 type: Array

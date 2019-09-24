@@ -1,0 +1,50 @@
+@import "../../color";
+
+@keyframes dialog-move-up
+{
+  from {top:calc(100vh);}
+  to {top:2em;}
+}
+
+@-webkit-keyframes dialog-move-up /*Safari and Chrome*/
+{
+  from {top:calc(100vh);}
+  to {top:2em;}
+}
+
+.he-dialog{
+
+  .he-dialog-body {
+    position: fixed;
+    top: 2em;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    overflow: hidden auto;
+
+    animation:dialog-move-up 0.3s ;
+    -webkit-animation:dialog-move-up 0.3s; /*Safari and Chrome*/
+
+    .header{
+      height: 2.8em;
+      line-height: 2.8em;
+      width: 100%;
+      border-bottom: 0.05em solid @gray-light;
+      padding: 0 10px;
+
+      display: flex;
+      justify-content: space-between;
+      .close{
+        width: 15px;
+        font-size: 1.5em;
+      }
+      .title{
+        font-weight: bold;
+      }
+      .actions{
+        width: 15px;
+      }
+    }
+  }
+}

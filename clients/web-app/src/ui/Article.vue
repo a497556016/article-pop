@@ -25,6 +25,13 @@
                 </div>
             </div>
         </div>
+        <he-comment-bar @clickComment="onCommentClick" :comments-count="168" @like="onLike" @collect="onCollect"></he-comment-bar>
+
+        <he-dialog ref="commentsDialog" v-model="commentsVisible" :header="{title: '评论详情'}">
+            <div slot="body">
+                <div class="comment"></div>
+            </div>
+        </he-dialog>
     </div>
 </template>
 
@@ -38,7 +45,9 @@
         },
         data(){
             return {
-                show: false
+                show: false,
+
+                commentsVisible: false
             }
         },
         computed: {
@@ -77,6 +86,18 @@
             },
             showQrCode(){
 
+            },
+            onCommentClick(){
+                // alert('查看评论')
+                this.commentsVisible = true;
+            },
+            onLike(liked, success, fail){
+                setTimeout(() => {
+                    success();
+                }, 200)
+            },
+            onCollect(collected, success) {
+                success()
             }
         }
     }

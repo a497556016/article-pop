@@ -4,7 +4,7 @@
         <he-scroll-nav-bar style="position: fixed;top: 4em;left: 0.5em;right: 0.5em;z-index: 999;" :data="tagsData" :active-index="1" @change="onTagsChange"></he-scroll-nav-bar>
         <div ref="body" class="body">
             <he-panel style="margin-top: 10px">
-                <he-article-list :data="recommendList" :options="{imagePosition: 'left', loadMore: haveMore, loadingBarPosition: 5}" @loadMore="loadMore" @itemClick="onItemClick">
+                <he-article-list :data="recommendList" :options="{imagePosition: 'left', loadMore: haveMore}" @loadMore="loadMore" @itemClick="onItemClick">
                     <div slot="footer-left" slot-scope="{metadata}">
                         <span v-if="metadata.source">来源：{{metadata.source}} </span>
                         <span v-if="metadata.chineseTag">标签：{{metadata.chineseTag}}</span>
@@ -13,7 +13,6 @@
                         {{metadata.date}}
                     </div>
                 </he-article-list>
-<!--                <div class="load-more" v-if="haveMore" @click="loadMore" align="center">加载更多</div>-->
             </he-panel>
         </div>
     </div>
@@ -91,12 +90,6 @@
             bottom: 0.5em;
             overflow: hidden auto;
 
-            .load-more {
-                text-align: center;
-                padding: 1em 0;
-                font-size: 0.8em;
-                color: #8888ff;
-            }
         }
     }
 
