@@ -1,7 +1,9 @@
 import * as article from "./article/types"
+import * as comment from "./comment/types"
 
 const moduleTypes = {
-    article
+    article,
+    comment
 }
 
 for (let module in moduleTypes) {

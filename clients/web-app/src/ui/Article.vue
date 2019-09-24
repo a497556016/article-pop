@@ -25,11 +25,22 @@
                 </div>
             </div>
         </div>
-        <he-comment-bar @clickComment="onCommentClick" :comments-count="168" @like="onLike" @collect="onCollect"></he-comment-bar>
+        <he-comment-bar @clickComment="onCommentClick" :comments-count="articleData.commentsCount" @like="onLike" @collect="onCollect"></he-comment-bar>
 
         <he-dialog ref="commentsDialog" v-model="commentsVisible" :header="{title: '评论详情'}">
-            <div slot="body">
-                <div class="comment"></div>
+            <div class="comments-body" slot="body">
+                <div v-if="articleComments.length == 0" align="center" style="color: #aaaaaa">还没有人评论</div>
+                <div v-else class="comment" v-for="comment in articleComments">
+                    <div class="info">
+                        <div class="user">来自 {{comment.username}} 的评论 </div>
+                        <div class="date">{{comment.date}}</div>
+                    </div>
+                    <div class="content">{{comment.content}}</div>
+                </div>
+                <div class="footer">
+                    <textarea class="input" v-model="commentContent" placeholder="添加评论"></textarea>
+                    <a @click="addComment">发布</a>
+                </div>
             </div>
         </he-dialog>
     </div>
@@ -47,12 +58,14 @@
             return {
                 show: false,
 
-                commentsVisible: false
+                commentsVisible: false,
+                commentContent: ''
             }
         },
         computed: {
             ...mapGetters({
-                articleData: moduleTypes.article.GET_VIEW_ARTICLE_DATA
+                articleData: moduleTypes.article.GET_VIEW_ARTICLE_DATA,
+                articleComments: moduleTypes.comment.GET_ARTICLE_COMMENTS
             })
         },
         activated(){
@@ -63,7 +76,9 @@
         },
         methods: {
             ...mapActions({
-                findById: moduleTypes.article.FIND_ARTICLE_BY_ID
+                findById: moduleTypes.article.FIND_ARTICLE_BY_ID,
+                loadArticleComments: moduleTypes.comment.LOAD_ARTICLE_COMMENTS,
+                addArticleComment: moduleTypes.comment.ADD_ARTICLE_COMMENT
             }),
             loadArticle(){
                 this.findById(this.id).then(() => {
@@ -90,6 +105,12 @@
             onCommentClick(){
                 // alert('查看评论')
                 this.commentsVisible = true;
+                this.loadArticleComments();
+            },
+            async addComment(){
+                await this.addArticleComment(this.commentContent);
+                this.commentContent = '';
+                this.articleData.commentsCount += 1;
             },
             onLike(liked, success, fail){
                 setTimeout(() => {
@@ -200,6 +221,55 @@
                         border-radius: 5px;
                         text-decoration: none;
                     }
+                }
+            }
+        }
+
+        .comments-body {
+            padding: 3em 0;
+            .comment {
+                border-bottom: 0.05em solid #efefef;
+                padding: 15px;
+                .info{
+                    font-size: 0.8em;
+                    color: #a0a0a0;
+                    display: flex;
+                    justify-content: space-between;
+                    .user{
+                        font-weight: bold;
+                    }
+                    .date{
+
+                    }
+                }
+
+                .content {
+                    padding: 10px 0;
+                    white-space: pre-line;
+                }
+            }
+
+            .footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 3.5em;
+                line-height: 3.5em;
+                border-top: 0.05em solid #efefef;
+                padding: 0 0.5em;
+                background: white;
+                display: flex;
+                .input{
+                    height: 3em;
+                    margin-top: 0.5em;
+                    border: 0;
+                    flex: 1;
+                }
+                a{
+                    width: 3em;
+                    color: #5c7fff;
+                    margin-left: 10px;
                 }
             }
         }
