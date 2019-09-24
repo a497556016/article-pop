@@ -5,6 +5,6 @@ export default {
         return http.get("/article/list", {params: {page: page||0, size: 10}})
     },
     getById(id) {
-        return http.get("/article/"+id);
+        return http.withLoading().get("/article/"+id);
     }
 }

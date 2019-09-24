@@ -71,6 +71,10 @@
         activated(){
             this.loadArticle();
         },
+        deactivated(){
+            this.show = false;
+            this.commentsVisible = false;
+        },
         mounted(){
 
         },
@@ -81,6 +85,12 @@
                 addArticleComment: moduleTypes.comment.ADD_ARTICLE_COMMENT
             }),
             loadArticle(){
+                const loading = this.$createToast({
+                    msg: '正在加载，请稍候...',
+                    time: 0,
+                    type: 'loading'
+                });
+                loading.show();
                 this.findById(this.id).then(() => {
                     setTimeout(() => {
                         const imgs = this.$el.getElementsByTagName('IMG');
@@ -91,6 +101,7 @@
                         }
 
                         this.show = true;
+                        loading.hide();
                     }, 500);
                 });
             },
@@ -108,6 +119,12 @@
                 this.loadArticleComments();
             },
             async addComment(){
+                if(this.commentContent.length >= 100){
+                    this.$createToast({
+                        msg: '最大长度不超过100个字符！'
+                    }).show();
+                    return;
+                }
                 await this.addArticleComment(this.commentContent);
                 this.commentContent = '';
                 this.articleData.commentsCount += 1;
