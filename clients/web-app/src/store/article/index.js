@@ -38,8 +38,8 @@ const getters = {
 const mutations = {}
 
 const actions = {
-    async [types.SELECT_RECOMMEND_PAGE_DATA]({state}){
-        const page = await articleApi.selectRecommendList(0);
+    async [types.SELECT_ARTICLE_PAGE_DATA]({state}, tag){
+        const page = await articleApi.selectList(0, tag);
         state.resultPage = page;
         state.loadMore = {
             haveMore: !page.last,
@@ -47,8 +47,8 @@ const actions = {
             position: page.content.length-1
         }
     },
-    async [types.SELECT_NEXT_RECOMMEND_PAGE_DATA]({state}){
-        const page = await articleApi.selectRecommendList(state.resultPage.pageable.pageNumber+1);
+    async [types.SELECT_NEXT_ARTICLE_PAGE_DATA]({state}, tag){
+        const page = await articleApi.selectList(state.resultPage.pageable.pageNumber+1, tag);
         state.loadMore = {
             haveMore: !page.last,
             lastTime: moment().format('HH:mm:ss'),

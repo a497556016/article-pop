@@ -1,7 +1,9 @@
 <template>
     <div class="he-scroll-nav-bar" :style="{height: '2.5em', lineHeight: '2.5em'}">
         <he-scroll direction="horizontal">
-            <div v-for="(item, index) in data" :class="['he-scroll-item', activeIndex_ === index?'active':'']" @click="onItemClick(item, index)">{{item}}</div>
+            <div v-for="(item, index) in data" :class="['he-scroll-item', activeIndex_ === index?'active':'']" @click="onItemClick(item, index)">
+                <slot :item="item"></slot>
+            </div>
         </he-scroll>
     </div>
 </template>

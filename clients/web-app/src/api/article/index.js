@@ -1,10 +1,10 @@
 import http from "../../net/http"
 
 export default {
-    selectRecommendList(page){
-        return http.get("/article/list", {params: {page: page||0, size: 10}})
+    selectList(page, tag){
+        return http.withLoading().get("/article/list", {params: {page: page||0, size: 10, tag}})
     },
     getById(id) {
-        return http.withLoading().get("/article/"+id);
+        return http.get("/article/"+id);
     }
 }

@@ -1,7 +1,9 @@
 <template>
     <div class="home">
         <he-title-bar title="I推广" :left="{back: false}" :right="{icon: 'fa fa-user'}"></he-title-bar>
-        <he-scroll-nav-bar style="position: fixed;top: 4em;left: 0.5em;right: 0.5em;z-index: 999;" :data="tagsData" :active-index="1" @change="onTagsChange"></he-scroll-nav-bar>
+        <he-scroll-nav-bar style="position: fixed;top: 4em;left: 0.5em;right: 0.5em;z-index: 999;" :data="tagsData" :active-index="activeTagIndex" @change="onTagsChange">
+            <div slot-scope="{item}">{{item.label}}</div>
+        </he-scroll-nav-bar>
         <div ref="body" class="body">
             <he-panel style="margin-top: 10px">
                 <he-article-list :data="recommendList" :options="{imagePosition: 'left', loadMore: haveMore}" @loadMore="loadMore" @itemClick="onItemClick">
@@ -26,15 +28,17 @@
         name: "Home",
         data(){
             return {
+                activeTagIndex: 1,
                 tagsData: [
-                    '推荐',
-                    '热点',
-                    '科技',
-                    '体育',
-                    '社会',
-                    '两性',
-                    '娱乐',
-                    '国际观察'
+                    {label: '推荐', tag: 'news_recommend'},
+                    {label: '热点', tag: 'news_hot'},
+                    {label: '时政', tag: 'news_politics'},
+                    {label: '社会', tag: 'news_society'},
+                    {label: '国际', tag: 'news_world'},
+                    {label: '娱乐', tag: 'news_entertainment'},
+                    {label: '科技', tag: 'news_tech'},
+                    {label: '体育', tag: 'news_sports'},
+                    {label: '军事', tag: 'news_military'}
                 ],
                 scrollTop: 0
             }
@@ -50,7 +54,7 @@
             this.$refs.body.scrollTo(0, this.scrollTop)
         },
         mounted(){
-            this.selectRecommendList();
+            this.selectArticleList(this.tagsData[this.activeTagIndex].tag);
             this.$refs.body.onscroll = (e) => {
                 // console.log(e.target.scrollTop)
                 this.scrollTop = e.target.scrollTop;
@@ -58,11 +62,13 @@
         },
         methods: {
             ...mapActions({
-                selectRecommendList: moduleTypes.article.SELECT_RECOMMEND_PAGE_DATA,
-                loadNextPage: moduleTypes.article.SELECT_NEXT_RECOMMEND_PAGE_DATA
+                selectArticleList: moduleTypes.article.SELECT_ARTICLE_PAGE_DATA,
+                loadNextPage: moduleTypes.article.SELECT_NEXT_ARTICLE_PAGE_DATA
             }),
             onTagsChange(item, index){
                 console.log(item, index)
+                this.activeTagIndex = index;
+                this.selectArticleList(item.tag);
             },
             onItemClick(article) {
                 console.log(article)
@@ -71,7 +77,7 @@
                 })
             },
             async loadMore(){
-                await this.loadNextPage();
+                await this.loadNextPage(this.tagsData[this.activeTagIndex].tag);
                 this.$refs.body.scrollTo(0, 0);
             }
         }
