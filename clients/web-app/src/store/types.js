@@ -1,9 +1,11 @@
 import * as article from "./article/types"
 import * as comment from "./comment/types"
+import * as user from "./user/types"
 
 const moduleTypes = {
     article,
-    comment
+    comment,
+    user
 }
 
 for (let module in moduleTypes) {

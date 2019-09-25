@@ -74,6 +74,7 @@
         deactivated(){
             this.show = false;
             this.commentsVisible = false;
+            document.title = '推推棒';
         },
         mounted(){
 
@@ -92,6 +93,7 @@
                 });
                 loading.show();
                 this.findById(this.id).then(() => {
+                    document.title = this.articleData.title;
                     setTimeout(() => {
                         const imgs = this.$el.getElementsByTagName('IMG');
                         // alert(imgs.length)

@@ -20,7 +20,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     // ...
-    console.log(`切换路由从${from.fullPath}到${to.fullPath}`);
+    console.log(`切换路由从`,from,`到`,to);
     if(to.path.startsWith('/main/user')){
         //check login
         const userInfo = store.getters['account/GET_LOGIN_USER'];

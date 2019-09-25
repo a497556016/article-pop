@@ -2,6 +2,7 @@ import TitleBar from "./base/TitleBar"
 import Panel from "./base/Panel";
 import List from "./base/List";
 import ToolBar from "./base/ToolBar";
+import Button from "./base/Button";
 
 import ArticleList from "./extension/ArticleList";
 import CommentBar from "./extension/CommentBar";
@@ -9,6 +10,10 @@ import CommentBar from "./extension/CommentBar";
 import Modal from "./dialog/Modal";
 import Dialog from "./dialog/Dialog";
 import Toast from "./dialog/Toast";
+
+import Form from "./form/Form";
+import FormGroup from "./form/FormGroup";
+import FormItem from "./form/FormItem";
 
 import Scroll from "./scroll/Scroll";
 import ScrollNavBar from "./scroll/ScrollNavBar";
@@ -18,6 +23,7 @@ export const components = [
     Panel,
     List,
     ToolBar,
+    Button,
 
     ArticleList,
     CommentBar,
@@ -25,6 +31,10 @@ export const components = [
     Modal,
     Dialog,
     Toast,
+
+    Form,
+    FormGroup,
+    FormItem,
 
     Scroll,
     ScrollNavBar

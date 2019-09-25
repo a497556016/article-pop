@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
     private ObjectId id;
     private String username;
+    private String avatar;
     /**
      * 公司名称
      */
@@ -25,6 +26,10 @@ public class User {
      * 联系方式
      */
     private String phone;
+    /**
+     * 邮箱
+     */
+    private String email;
     /**
      * 微信ID
      */

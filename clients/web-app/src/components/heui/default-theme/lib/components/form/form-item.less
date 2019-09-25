@@ -1,0 +1,21 @@
+@import "../../color";
+
+.he-form-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: @white;
+  //height: 2em;
+  &:not(:last-child){
+    border-bottom: 0.01em solid @gray-light;
+  }
+  .he-form-label{
+    color: @form-label-color;
+    min-width: 4em;
+    margin-right: 15px;
+  }
+  .he-form-input{
+    color: @form-input-color;
+    flex: 1;
+  }
+}

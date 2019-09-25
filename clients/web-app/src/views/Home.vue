@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <he-title-bar title="I推广" :left="{back: false}" :right="{icon: 'fa fa-user'}"></he-title-bar>
+        <he-title-bar title="I推广" :left="{back: false}" :right="{icon: 'fa fa-user'}" @rightClick="gotoUserCenter"></he-title-bar>
         <he-scroll-nav-bar style="position: fixed;top: 4em;left: 0.5em;right: 0.5em;z-index: 999;" :data="tagsData" :active-index="activeTagIndex" @change="onTagsChange">
             <div slot-scope="{item}">{{item.label}}</div>
         </he-scroll-nav-bar>
@@ -79,6 +79,9 @@
             async loadMore(){
                 await this.loadNextPage(this.tagsData[this.activeTagIndex].tag);
                 this.$refs.body.scrollTo(0, 0);
+            },
+            gotoUserCenter(){
+                this.$router.push("/user")
             }
         }
     }
