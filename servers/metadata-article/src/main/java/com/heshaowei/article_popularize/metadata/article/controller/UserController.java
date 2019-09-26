@@ -1,0 +1,49 @@
+package com.heshaowei.article_popularize.metadata.article.controller;
+
+import com.heshaowei.article_popularize.common.exception.ErrorMessageException;
+import com.heshaowei.article_popularize.entity.User;
+import com.heshaowei.article_popularize.metadata.article.repository.UserRepository;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
+
+@RestController
+@RequestMapping("/user")
+@Validated
+public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping
+    public ResponseEntity<User> save(@RequestBody User user){
+        user = this.userRepository.save(user);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/loginWithPwd")
+    public ResponseEntity loginWithPwd(@NotBlank(message = "用户名不能为空！") String username, @NotBlank(message = "密码不能为空！") String password){
+        User probe = new User();
+        probe.setUsername(username);
+        probe.setPassword(password);
+        User user = this.userRepository.findOne(Example.of(probe)).orElse(null);
+        if(null != user){
+            return ResponseEntity.ok(user);
+        }else{
+            throw new ErrorMessageException("账号或密码错误，请重试！");
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getById(@PathVariable("id") String id){
+        User user = this.userRepository.findById(new ObjectId(id)).orElse(new User());
+        return ResponseEntity.ok(user);
+    }
+}

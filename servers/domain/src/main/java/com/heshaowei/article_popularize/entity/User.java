@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
     private ObjectId id;
     private String username;
+    private String password;
     private String avatar;
     /**
      * 公司名称

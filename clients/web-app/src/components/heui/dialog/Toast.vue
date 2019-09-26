@@ -1,7 +1,7 @@
 <template>
     <div class="he-toast" v-if="visible">
         <he-modal v-if="mask"></he-modal>
-        <div class="he-toast-msg">
+        <div class="he-toast-msg" :style="{top: top}">
             <div class="text"><i v-if="type != 'text'" :class="[iconClass]"></i>{{msg}}</div>
         </div>
     </div>
@@ -18,10 +18,20 @@
               msg: '',
               mask: false,
               time: 2000,
-              type: 'text' //text loading warn error
+              type: 'text', //text loading warn error success
+              position: 'center', //center top bottom
           }
         },
         computed: {
+            top(){
+                if(this.position == 'center'){
+                    return '45%';
+                }else if(this.position == 'top'){
+                    return '2em';
+                }else{
+                    return 'calc(100vh - 5em)';
+                }
+            },
             iconClass(){
                 if(this.type == 'loading') {
                     return 'fa fa-spin fa-spinner';
@@ -29,6 +39,8 @@
                     return 'fa fa-warning';
                 }else if(this.type == 'error') {
                     return 'fa fa-close';
+                }else if(this.type == 'success') {
+                    return 'fa fa-check';
                 }
                 return '';
             }
@@ -42,6 +54,7 @@
                 this.mask = options.mask || false;
                 this.time = options.time || 2000;
                 this.type = options.type || 'text';
+                this.position = options.position || 'center';
                 return this;
             },
             afterShow(){

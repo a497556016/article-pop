@@ -14,8 +14,11 @@
                         </div>
                     </div>
                     <div class="r">
-                        <div>{{userData.company}}</div>
-                        <div>{{userData.post}}</div>
+                        <div class="login" v-if="!userData.id" @click="toLogin">点击登录</div>
+                        <template v-else>
+                            <div>{{userData.company}}</div>
+                            <div>{{userData.post}}</div>
+                        </template>
                         <div style="margin-top: 15px;color: #3ab566">{{userData.declaration}}</div>
                     </div>
                     <div class="ac" @click="toEditUser"><i class="fa fa-angle-right"></i></div>
@@ -57,6 +60,9 @@
         methods: {
             toEditUser(){
                 this.$router.push('/user/edit')
+            },
+            toLogin(){
+                this.$router.push('/user/login')
             }
         }
     }
@@ -106,9 +112,14 @@
                     }
                 }
                 .r {
+                    margin-top: 1.5em;
                     flex: 1;
-                    padding: 10px 0;
                     font-size: 0.9em;
+
+                    .login{
+                        text-decoration-line: underline;
+                        color: #5c7fff;
+                    }
                 }
 
             }

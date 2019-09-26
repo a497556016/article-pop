@@ -1,6 +1,6 @@
 <template>
     <div class="he-button" :style="{width: inline?'':'100%'}">
-        <button @click="onClick" :disabled="disabled" :style="{backgroundColor: backgroundColor, border: '0.01em solid '+borderColor, color: color}">
+        <button @click="onClick" :disabled="disabled" :style="{backgroundColor: backgroundColor, border: borderColor?'0.01em solid '+borderColor:'', color: color}">
             <slot></slot>
         </button>
     </div>

@@ -1,6 +1,8 @@
 import store from '../../store'
 import moduleTypes from '../../store/types'
 
+import Vue from 'vue'
+
 const excludes = [
     '/login'
 ]
@@ -45,9 +47,7 @@ export default (http) => {
         http.closeLoading();
 
         let msg = '';
-        if(error.message) {
-            msg = error.message;
-        }
+
 
         if(error.response){
 
@@ -64,12 +64,14 @@ export default (http) => {
             }
 
             if(error.response.data) {
-                msg += (error.response.data.msg || error.response.data.message || '');
+                msg += error.response.data;
             }
             // msg += error.response.statusText;
+        }else if(error.message) {
+            msg = error.message;
         }
 
-        alert(msg);
+        alert(msg)
 
         return Promise.reject(msg);
     });

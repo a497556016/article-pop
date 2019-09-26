@@ -4,7 +4,7 @@
             <input type="email" :readonly="options.readonly" v-model="inputValue"></input>
         </template>
         <template v-else>
-            <input :type="options.type" :readonly="options.readonly" v-model="inputValue"/>
+            <input :type="options.type" :readonly="options.readonly" :placeholder="options.placeholder" v-model="inputValue"/>
         </template>
 
     </div>

@@ -24,7 +24,8 @@ const actions = {
     },
     async [types.ADD_ARTICLE_COMMENT] ({state, rootGetters}, commentContent) {
         const article = rootGetters[moduleTypes.article.GET_VIEW_ARTICLE_DATA];
-        const comment = await commentApi.addArticleComment(article.id, commentContent);
+        const userData = rootGetters[moduleTypes.user.GET_LOGIN_USER_DATA];
+        const comment = await commentApi.addArticleComment(article.id, commentContent, userData.username);
         state.articleComments = [comment].concat(state.articleComments);
     }
 }

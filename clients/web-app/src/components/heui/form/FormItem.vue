@@ -7,7 +7,7 @@
             <he-button @click="resetForm">{{field.label}}</he-button>
         </template>
         <template v-else>
-            <div class="he-form-label">{{field.label}}</div>
+            <div class="he-form-label" v-if="field.label">{{field.label}}</div>
             <component class="he-form-input" :is="'he-'+field.type" v-model="form.data[field.name]" :options="field.options"></component>
         </template>
     </div>

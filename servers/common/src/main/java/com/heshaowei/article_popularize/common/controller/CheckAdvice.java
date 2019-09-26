@@ -2,6 +2,7 @@ package com.heshaowei.article_popularize.common.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.heshaowei.article_popularize.common.exception.ErrorMessageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,9 +43,18 @@ public class CheckAdvice {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public String handleBindException2(ConstraintViolationException e) {
+    public ResponseEntity handleBindException2(ConstraintViolationException e) {
         e.getConstraintViolations().forEach(System.out::println);
-        return "ConstraintViolationException";
+        StringBuffer error = new StringBuffer();
+        e.getConstraintViolations().forEach(constraintViolation -> {
+            error.append(constraintViolation.getMessage());
+        });
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ErrorMessageException.class)
+    public ResponseEntity handleCustomMessageException(ErrorMessageException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
 }
