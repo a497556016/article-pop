@@ -18,10 +18,10 @@ export default (http) => {
         }
 
         const loginUser = store.getters[moduleTypes.user.GET_LOGIN_USER_DATA];
-        if(loginUser){
+        if(loginUser && loginUser.id){
             config.headers['token'] = loginUser.token;
             config.headers['userId'] = loginUser.id;
-            config.headers['username'] = loginUser.username;
+            config.headers['username'] = encodeURIComponent(loginUser.username);
         }
 
 

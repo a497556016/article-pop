@@ -44,6 +44,7 @@
                 actions: [
                     {icon: 'fa fa-star', iconColor: '#4288ff', label: '收藏'},
                     {icon: 'fa fa-heart', iconColor: '#ff5956', label: '点赞'},
+                    {icon: 'fa fa-cube', iconColor: '#8bff82', label: '数据'},
                     {icon: 'fa fa-cog', iconColor: '#47e3b4', label: '设置'}
                 ]
             }
@@ -61,10 +62,20 @@
                 this.$router.push('/user/login')
             },
             itemClick(item){
+                if(!this.userData.id){
+                    this.$createToast({msg: '请先登录！'}).show();
+                    return;
+                }
                 switch (item.label) {
                     default: break;
                     case '设置':
                         this.$router.push('/setting')
+                        break;
+                    case '收藏':
+                        this.$router.push('/user/collect/'+this.userData.id)
+                        break;
+                    case '点赞':
+                        this.$router.push('/user/like/'+this.userData.id)
                         break;
                 }
             }
@@ -75,7 +86,7 @@
 <style scoped lang="less">
     .ac{
         color: #a8a8a8;
-        width: 25px;
+        width: 30px;
         text-align: right;
         border-left: 0.02em solid #efefef;
         i{
@@ -118,6 +129,7 @@
                 }
                 .r {
                     margin-top: 1.5em;
+                    margin-right: 1em;
                     flex: 1;
                     font-size: 0.9em;
 

@@ -1,44 +1,50 @@
 <template>
-    <div class="article">
-        <he-title-bar :title="articleData.title" :left="{icon: 'fa fa-home'}" @leftClick="backToHome" @rightClick="sharePage" :right="{icon: 'fa fa-share'}"></he-title-bar>
-        <div class="container" :style="{display: show?'block':'none'}">
-            <div class="title">{{articleData.article.title}}</div>
-            <div class="desc">
-                <span>收藏：{{articleData.article.collectsCount||0}}</span>
-                <span>点赞：{{articleData.article.likesCount||0}}</span>
-                <span>阅读：{{articleData.article.viewsCount||0}}</span>
-            </div>
-
-            <div class="user">
-                <div class="ad-words">{{userData.declaration}}</div>
-                <!--<div class="info">
-                    <div class="username">何少伟</div>
-                </div>-->
-
-                <a @click="goAnchor('#user_card')">联系他/她</a>
-            </div>
-
-            <div class="content" v-html="articleData.article.content"></div>
-
-            <div id="user_card" class="user-card">
-                <div class="username">{{userData.username}}</div>
-                <div class="avatar" v-if="userData.avatar">
-                    <img :src="userData.avatar"/>
+    <he-page ref="page" class="article" :header="true" :footer="true">
+        <template slot="header">
+            <he-title-bar :title="articleData.article.title" :left="{icon: 'fa fa-home'}" @leftClick="backToHome" @rightClick="sharePage" :right="{icon: 'fa fa-share'}"></he-title-bar>
+        </template>
+        <template slot="body">
+            <div class="container" :style="{display: show?'block':'none'}">
+                <div class="title">{{articleData.article.title}}</div>
+                <div class="desc">
+                    <span>收藏：{{articleData.article.collectsCount||0}}</span>
+                    <span>点赞：{{articleData.article.likesCount||0}}</span>
+                    <span>阅读：{{articleData.article.viewsCount||0}}</span>
                 </div>
-                <div class="jobs">{{userData.post}}</div>
-<!--                <div class="declaration">战斗吧，少年！！！</div>-->
-                <div class="contact">
-                    <div class="qrCode" @click="showQrCode"><i class="fa fa-commenting-o"></i>&nbsp;添加微信</div>
-                    <a class="phone" :href="'tel:'+userData.phone"><i class="fa fa-mobile-phone"></i>&nbsp;手机通话</a>
+
+                <div class="user">
+                    <div class="ad-words">{{userData.declaration}}</div>
+                    <!--<div class="info">
+                        <div class="username">何少伟</div>
+                    </div>-->
+
+                    <a @click="goAnchor('#user_card')">联系他/她</a>
+                </div>
+
+                <div class="content" v-html="articleData.article.content"></div>
+
+                <div id="user_card" class="user-card">
+                    <div class="username">{{userData.username}}</div>
+                    <div class="avatar" v-if="userData.avatar">
+                        <img :src="userData.avatar"/>
+                    </div>
+                    <div class="jobs">{{userData.post}}</div>
+    <!--                <div class="declaration">战斗吧，少年！！！</div>-->
+                    <div class="contact">
+                        <div class="qrCode" @click="showQrCode"><i class="fa fa-commenting-o"></i>&nbsp;添加微信</div>
+                        <a class="phone" :href="'tel:'+userData.phone"><i class="fa fa-mobile-phone"></i>&nbsp;手机通话</a>
+                    </div>
+                </div>
+
+                <div class="foot">
+                    <span>哇！好厉害，我也要！！</span>
+                    <a @click="goUserEdit">点这里立刻注册</a>
                 </div>
             </div>
-
-            <div class="foot">
-                <span>哇！好厉害，我也要！！</span>
-                <a @click="goUserEdit">点这里立刻注册</a>
-            </div>
-        </div>
-        <he-comment-bar :liked="articleData.liked" :collected="articleData.collected" @clickComment="onCommentClick" :comments-count="articleData.article.commentsCount" @like="onLike" @collect="onCollect"></he-comment-bar>
+        </template>
+        <template slot="footer">
+            <he-comment-bar :liked="articleData.liked" :collected="articleData.collected" @clickComment="onCommentClick" :comments-count="articleData.article.commentsCount" @like="onLike" @collect="onCollect"></he-comment-bar>
+        </template>
 
         <he-dialog ref="commentsDialog" v-model="commentsVisible" :header="{title: '评论详情'}">
             <div class="comments-body" slot="body">
@@ -63,7 +69,7 @@
                 <div v-else>没有上传微信二维码</div>
             </div>
         </he-dialog>
-    </div>
+    </he-page>
 </template>
 
 <script>
@@ -96,13 +102,12 @@
         },
         computed: {
             ...mapGetters({
-                // loginUser: moduleTypes.user.GET_LOGIN_USER_DATA,
+                loginUser: moduleTypes.user.GET_LOGIN_USER_DATA,
                 articleData: moduleTypes.article.GET_VIEW_ARTICLE_DATA,
                 articleComments: moduleTypes.comment.GET_ARTICLE_COMMENTS
             })
         },
         mounted(){
-            this.userId = this.userId==='0'?null:this.userId;
             this.updateViewsCount({articleId: this.id, userId: this.userId});
             this.loadArticle();
             this.loadUserData();
@@ -162,9 +167,10 @@
                 });
             },
             goAnchor(selector) {
+                const scrollTarget = this.$refs.page.$el.children[1];
                 const anchor = this.$el.querySelector(selector) // 参数为要跳转到的元素id
-                document.body.scrollTop = anchor.offsetTop; // chrome
-                document.documentElement.scrollTop = anchor.offsetTop; // firefox
+
+                scrollTarget.scrollTop = anchor.offsetTop;
 
                 if(this.id && this.userId) {
                     this.checkUserCardCount({articleId: this.id, userId: this.userId});
@@ -190,12 +196,29 @@
                 this.articleData.article.commentsCount += 1;
             },
             async onLike(liked, success, fail){
-                await articleApi.like(this.id, this.userId, liked);
-                success();
+                if(!this.loginUser.id){
+                    this.$createToast({msg: '请先登录'}).show();
+                    return;
+                }
+                const re = await articleApi.like(this.id, this.loginUser.id, liked);
+                console.log(re)
+                if(re === 'success') {
+                    success();
+                }else {
+                    fail();
+                }
             },
-            async onCollect(collected, success) {
-                await articleApi.collect(this.id, this.userId, collected);
-                success()
+            async onCollect(collected, success, fail) {
+                if(!this.loginUser.id){
+                    this.$createToast({msg: '请先登录'}).show();
+                    return;
+                }
+                const re = await articleApi.collect(this.id, this.loginUser.id, collected);
+                if(re === 'success') {
+                    success();
+                }else {
+                    fail();
+                }
             }
         }
     }
@@ -205,11 +228,12 @@
 
     .article {
         background: #ffffff;
-        padding: 0.5em;
+        /*padding: 0.5em;*/
         /*height: 100%;*/
         .container {
             position: relative;
-            top: 4em;
+            top: 1em;
+            padding: 1em;
             .title {
                 font-weight: bold;
                 font-size: 1.5em;

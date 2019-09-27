@@ -37,7 +37,7 @@
                         }
                         fileReader.readAsDataURL(file);
                             }}},
-                    {type: 'upload', label: '微信二维码', name: 'wxQRCode', options: {upload(file){
+                    {type: 'upload', label: '微信', name: 'wxQRCode', options: {upload(file){
                                 const fileReader = new FileReader();
                                 fileReader.onload = (e) => {
                                     const data = e.target.result;
@@ -65,7 +65,7 @@
         computed: {
 
         },
-        activated(){
+        mounted(){
            this.getUserById();
         },
         methods: {

@@ -1,24 +1,28 @@
 <template>
-    <div class="home">
-        <he-title-bar title="I推广" :left="{back: false}" :right="{icon: 'fa fa-user'}" @rightClick="gotoUserCenter"></he-title-bar>
-        <he-scroll-nav-bar style="position: fixed;top: 4em;left: 0.5em;right: 0.5em;z-index: 999;" :data="tagsData" :active-index="activeTagIndex" @change="onTagsChange">
-            <div slot-scope="{item}">{{item.label}}</div>
-        </he-scroll-nav-bar>
-        <div ref="body" class="body">
-            <he-panel style="margin-top: 10px">
-                <he-article-list :data="recommendList" :options="{imagePosition: 'left', loadMore: haveMore}" @loadMore="loadMore" @itemClick="onItemClick">
-                    <div slot="footer-left" slot-scope="{metadata}">
-                        <span v-if="metadata.source">来源：{{metadata.source}} </span>
-                        <span v-if="metadata.chineseTag">标签：{{metadata.chineseTag}}</span>
-                    </div>
-                    <div slot="footer-right" slot-scope="{metadata}">
-                        <span>阅读：{{metadata.viewsCount||0}}</span>
-                        <span>{{metadata.date.length > 16 ? metadata.date.substring(0, 16) : metadata.date}}</span>
-                    </div>
-                </he-article-list>
-            </he-panel>
+    <he-page class="home" :header="true">
+        <div slot="header">
+            <he-title-bar title="I推广" :left="{back: false}" :right="{icon: 'fa fa-user'}" @rightClick="gotoUserCenter"></he-title-bar>
         </div>
-    </div>
+        <div slot="body">
+            <he-scroll-nav-bar style="position: fixed;top: 4em;left: 0.5em;right: 0.5em;z-index: 999;" :data="tagsData" :active-index="activeTagIndex" @change="onTagsChange">
+                <div slot-scope="{item}">{{item.label}}</div>
+            </he-scroll-nav-bar>
+            <div ref="body" class="body">
+                <he-panel style="margin-top: 10px">
+                    <he-article-list :data="recommendList" :options="{imagePosition: 'left', loadMore: haveMore}" @loadMore="loadMore" @itemClick="onItemClick">
+                        <div slot="footer-left" slot-scope="{metadata}">
+                            <span v-if="metadata.source">来源：{{metadata.source}} </span>
+                            <span v-if="metadata.chineseTag">标签：{{metadata.chineseTag}}</span>
+                        </div>
+                        <div slot="footer-right" slot-scope="{metadata}">
+                            <span>阅读：{{metadata.viewsCount||0}}</span>
+                            <span>{{metadata.date.length > 16 ? metadata.date.substring(0, 16) : metadata.date}}</span>
+                        </div>
+                    </he-article-list>
+                </he-panel>
+            </div>
+        </div>
+    </he-page>
 </template>
 
 <script>
@@ -97,12 +101,7 @@
         /*height: 100%;*/
         /*width: 100%;*/
         .body{
-            position: absolute;
-            top: 7em;
-            left: 0.5em;
-            right: 0.5em;
-            bottom: 0.5em;
-            overflow: hidden auto;
+            margin: 4em 0.5em 0.5em 0.5em;
 
         }
     }

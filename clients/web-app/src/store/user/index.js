@@ -25,6 +25,9 @@ const state = {
 
 const getters = {
    [types.GET_LOGIN_USER_DATA](state){
+       if(state.userData.id){
+           return state.userData;
+       }
        //取缓存
        const json = localStorage.getItem(STORAGE_USER_KEY);
        if(json){

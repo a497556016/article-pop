@@ -179,7 +179,7 @@ public class ArticleController {
     }
 
     @PostMapping("/like")
-    public ResponseEntity like(@NotBlank String articleId, @NotBlank String userId, @NotNull Boolean liked){
+    public ResponseEntity<String> like(@NotBlank String articleId, @NotBlank String userId, @NotNull Boolean liked){
         User user = this.userRepository.findById(new ObjectId(userId)).orElse(null);
         if(null == user) {
             throw new ErrorMessageException("userId 错误");
@@ -210,11 +210,11 @@ public class ArticleController {
 
         this.articleRepository.save(article);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("success");
     }
 
     @PostMapping("/collect")
-    public ResponseEntity collect(@NotBlank String articleId, @NotBlank String userId, @NotNull Boolean collected){
+    public ResponseEntity<String> collect(@NotBlank String articleId, @NotBlank String userId, @NotNull Boolean collected){
         User user = this.userRepository.findById(new ObjectId(userId)).orElse(null);
         if(null == user) {
             throw new ErrorMessageException("userId 错误");
@@ -244,7 +244,7 @@ public class ArticleController {
 
         this.articleRepository.save(article);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("success");
     }
 
     @GetMapping("/view")

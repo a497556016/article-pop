@@ -4,6 +4,7 @@ import List from "./base/List";
 import ListItem from "./base/ListItem";
 import ToolBar from "./base/ToolBar";
 import Button from "./base/Button";
+import Alert from "./base/Alert";
 
 import ArticleList from "./extension/ArticleList";
 import CommentBar from "./extension/CommentBar";
@@ -19,6 +20,11 @@ import FormItem from "./form/FormItem";
 import Scroll from "./scroll/Scroll";
 import ScrollNavBar from "./scroll/ScrollNavBar";
 
+import Page from "./layout/Page";
+import PageHeader from "./layout/PageHeader";
+import PageBody from "./layout/PageBody";
+import PageFooter from "./layout/PageFooter";
+
 export const components = [
     TitleBar,
     Panel,
@@ -26,6 +32,7 @@ export const components = [
     ListItem,
     ToolBar,
     Button,
+    Alert,
 
     ArticleList,
     CommentBar,
@@ -39,7 +46,12 @@ export const components = [
     FormItem,
 
     Scroll,
-    ScrollNavBar
+    ScrollNavBar,
+
+    Page,
+    PageHeader,
+    PageBody,
+    PageFooter
 ]
 
 const createComponent = function (Vue, comp, options) {
