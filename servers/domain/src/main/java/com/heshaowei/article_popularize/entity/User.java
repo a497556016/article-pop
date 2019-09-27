@@ -4,6 +4,8 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Document
 public class User {
@@ -51,4 +53,16 @@ public class User {
      * 微信账号
      */
     private String wxUsername;
+
+    /**
+     * 收藏文章
+     */
+    private List<SimpleArticle> collectedArticles;
+
+    /**
+     * 点赞文章
+     */
+    private List<SimpleArticle> likedArticles;
+
+
 }

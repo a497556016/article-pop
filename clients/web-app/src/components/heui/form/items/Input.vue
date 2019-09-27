@@ -1,25 +1,24 @@
 <template>
     <div class="he-input">
-        <template v-if="options.type === 'email'">
-            <input type="email" :readonly="options.readonly" v-model="inputValue"></input>
+        <template v-if="config.type === 'email'">
+            <input type="email" :readonly="config.readonly" v-model="inputValue"></input>
         </template>
         <template v-else>
-            <input :type="options.type" :readonly="options.readonly" :placeholder="options.placeholder" v-model="inputValue"/>
+            <input :type="config.type" :readonly="config.readonly" :placeholder="config.placeholder" v-model="inputValue"/>
         </template>
 
     </div>
 </template>
 
 <script>
+
     export default {
         name: "Input",
         props: {
             options: {
                 type: Object,
                 default(){
-                    return {
-                        type: 'text'//default
-                    }
+                    return {}
                 }
             },
             value: Object|String
@@ -31,6 +30,13 @@
         data(){
             return {
                 inputValue: this.value
+            }
+        },
+        computed: {
+            config(){
+                return Object.assign({
+                    type: 'text'//default
+                }, this.options)
             }
         },
         watch: {

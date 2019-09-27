@@ -17,6 +17,7 @@
     import Input from "./items/Input";
     import Textarea from "./items/Textarea";
     import Button from "../base/Button";
+    import Upload from "./items/Upload";
     const field = {
         type: 'input' //default input, input textarea switch select upload checkbox checkbox-group radio radio-group
     }
@@ -25,7 +26,8 @@
         components: {
             'he-input': Input,
             'he-textarea': Textarea,
-            'he-button': Button
+            'he-button': Button,
+            'he-upload': Upload
         },
         props: {
             field: {

@@ -18,12 +18,40 @@
     import userApi from "../api/user"
     export default {
         name: "UserEdit",
+        props: {
+            id: String
+        },
         data(){
+            const that = this;
             return {
-                user: {},
+                user: {
+                    avatar: null,
+                    wxQRCode: null
+                },
                 fields: [
+                    {type: 'upload'/*, label: '头像'*/, name: 'avatar', options: {align: 'center', width: '5em', height: '5em', upload(file){
+                        const fileReader = new FileReader();
+                        fileReader.onload = (e) => {
+                            const data = e.target.result;
+                            that.user.avatar = data;
+                        }
+                        fileReader.readAsDataURL(file);
+                            }}},
+                    {type: 'upload', label: '微信二维码', name: 'wxQRCode', options: {upload(file){
+                                const fileReader = new FileReader();
+                                fileReader.onload = (e) => {
+                                    const data = e.target.result;
+                                    that.user.wxQRCode = data;
+                                }
+                                fileReader.readAsDataURL(file);
+                            }}},
                     {type: 'input', label: '用户名', name: 'username', options: {readonly: false}, rules: {required: true, message: '麻烦填一下用户名哦！'}},
-                    {type: 'input', label: '密码', name: 'password', options: {type: 'password', placeholder: '设置新密码'}, rules: {required: true, message: '麻烦设置一下密码哦！'}},
+                    {type: 'input', label: '密码', name: 'password', options: {type: 'password', placeholder: '设置新密码'}, rules: {check(v){
+                        if(!that.user.id && !v){
+                            return '麻烦设置一下密码哦！';
+                        }
+                        return true;
+                            }}},
                     {type: 'input', label: '所在公司', name: 'company', options: {readonly: false}, rules: {required: true, message: '公司名称不能为空哦！'}},
                     {type: 'input', label: '职位', name: 'post', options: {readonly: false}, rules: {required: true}},
                     {type: 'input', label: '手机号', name: 'phone', options: {readonly: false, type: 'number'}, rules: {required: true, maxLength: 13}},
@@ -35,12 +63,7 @@
             }
         },
         computed: {
-            ...mapState({
-                // userData: state => state.user.userData
-            }),
-            ...mapGetters({
-                userData: moduleTypes.user.GET_LOGIN_USER_DATA
-            })
+
         },
         activated(){
            this.getUserById();
@@ -50,11 +73,11 @@
                 saveUser: moduleTypes.user.SAVE_USER
             }),
             async getUserById(){
-                if(this.userData.id){
-                    this.user = await userApi.getById(this.userData.id);
-                    delete this.user.password;
+                if(this.id&&this.id !== '0'){
+                    this.user = await userApi.getById(this.id);
+                    this.user.password = '';
                     if(this.user.username){
-                        this.fields[0].options.readonly = true;
+                        this.fields[2].options.readonly = true;
                     }
                 }
             },

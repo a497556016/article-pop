@@ -4,3 +4,5 @@ export const GET_RECOMMEND_LIST = "GET_RECOMMEND_LIST";
 export const HAVE_MORE_PAGES = "HAVE_MORE_PAGES";
 export const FIND_ARTICLE_BY_ID = "FIND_ARTICLE_BY_ID";
 export const GET_VIEW_ARTICLE_DATA = "GET_VIEW_ARTICLE_DATA";
+export const UPDATE_ARTICLE_VIEWS_COUNT = "update_article_views_count";
+export const CHECK_USER_CARD_COUNT = "check_user_card_count";

@@ -42,6 +42,14 @@
 
             }
         },
+        watch: {
+            liked(v){
+                this.isLiked = v;
+            },
+            collected(v){
+                this.isCollected = v;
+            }
+        },
         computed: {
             actions(){
                 return [

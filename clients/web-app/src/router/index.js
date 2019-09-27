@@ -7,6 +7,7 @@ import store from "../store";
 
 const router = new VueRouter({
     routes,
+    // mode: 'history',
     /*scrollBehavior (to, from, savedPosition) {
         console.log(from, document.scrollingElement.scrollTop)
         if (savedPosition) {
@@ -20,15 +21,21 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     // ...
+    console.log(location)
     console.log(`切换路由从`,from,`到`,to);
-    if(to.path.startsWith('/main/user')){
+    /*if(to.path.startsWith('/main/user')){
         //check login
         const userInfo = store.getters['account/GET_LOGIN_USER'];
         console.log('检查用户登录信息：', userInfo)
         if(!userInfo || (!userInfo.username && !userInfo.phone)){
             next({path: '/login'});
         }
-    }
+    }*/
+    /*if(to.path.startsWith("/article/")&&!to.query.flag){
+        location.assign('/#'+to.fullPath+'?flag=1');
+    }else {
+        next();
+    }*/
 
     next();
 })

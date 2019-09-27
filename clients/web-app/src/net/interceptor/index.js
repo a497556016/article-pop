@@ -17,9 +17,11 @@ export default (http) => {
             return config;
         }
 
-        const loginUser = store.getters[moduleTypes.GET_LOGIN_USER];
+        const loginUser = store.getters[moduleTypes.user.GET_LOGIN_USER_DATA];
         if(loginUser){
             config.headers['token'] = loginUser.token;
+            config.headers['userId'] = loginUser.id;
+            config.headers['username'] = loginUser.username;
         }
 
 

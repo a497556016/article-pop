@@ -1,0 +1,34 @@
+@import "../../../color";
+
+.he-upload{
+  width: 100%;
+  //text-align: center;
+  .file-list{
+    display: inline-flex;
+    .file-input{
+      text-align: center;
+      height: 4em;
+      width: 4em;
+      border: 0.01em solid @gray-light;
+      .img{
+        height: 100%;
+        .icon{
+          font-size: 2em;
+          color: @gray;
+          position: relative;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+
+      &:not(:first-child){
+        margin-left: 10px;
+      }
+      .progress{
+        height: 1px;
+
+      }
+    }
+
+  }
+}

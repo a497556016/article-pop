@@ -1,31 +1,44 @@
 <template>
     <div class="article">
-        <he-title-bar :title="articleData.title" :left="{back: true}" :right="{icon: 'fa fa-share'}"></he-title-bar>
+        <he-title-bar :title="articleData.title" :left="{icon: 'fa fa-home'}" @leftClick="backToHome" @rightClick="sharePage" :right="{icon: 'fa fa-share'}"></he-title-bar>
         <div class="container" :style="{display: show?'block':'none'}">
-            <div class="title">{{articleData.title}}</div>
+            <div class="title">{{articleData.article.title}}</div>
+            <div class="desc">
+                <span>收藏：{{articleData.article.collectsCount||0}}</span>
+                <span>点赞：{{articleData.article.likesCount||0}}</span>
+                <span>阅读：{{articleData.article.viewsCount||0}}</span>
+            </div>
 
             <div class="user">
-                <div class="ad-words">想变强吗？来找我吧！！</div>
-                <div class="info">
+                <div class="ad-words">{{userData.declaration}}</div>
+                <!--<div class="info">
                     <div class="username">何少伟</div>
-                </div>
+                </div>-->
 
                 <a @click="goAnchor('#user_card')">联系他/她</a>
             </div>
 
-            <div class="content" v-html="articleData.content"></div>
+            <div class="content" v-html="articleData.article.content"></div>
 
             <div id="user_card" class="user-card">
-                <div class="username">何少伟</div>
-                <div class="jobs">工地经理</div>
+                <div class="username">{{userData.username}}</div>
+                <div class="avatar" v-if="userData.avatar">
+                    <img :src="userData.avatar"/>
+                </div>
+                <div class="jobs">{{userData.post}}</div>
 <!--                <div class="declaration">战斗吧，少年！！！</div>-->
                 <div class="contact">
                     <div class="qrCode" @click="showQrCode"><i class="fa fa-commenting-o"></i>&nbsp;添加微信</div>
-                    <a class="phone" href="tel:13249833007"><i class="fa fa-mobile-phone"></i>&nbsp;手机通话</a>
+                    <a class="phone" :href="'tel:'+userData.phone"><i class="fa fa-mobile-phone"></i>&nbsp;手机通话</a>
                 </div>
             </div>
+
+            <div class="foot">
+                <span>哇！好厉害，我也要！！</span>
+                <a @click="goUserEdit">点这里立刻注册</a>
+            </div>
         </div>
-        <he-comment-bar @clickComment="onCommentClick" :comments-count="articleData.commentsCount" @like="onLike" @collect="onCollect"></he-comment-bar>
+        <he-comment-bar :liked="articleData.liked" :collected="articleData.collected" @clickComment="onCommentClick" :comments-count="articleData.article.commentsCount" @like="onLike" @collect="onCollect"></he-comment-bar>
 
         <he-dialog ref="commentsDialog" v-model="commentsVisible" :header="{title: '评论详情'}">
             <div class="comments-body" slot="body">
@@ -43,48 +56,89 @@
                 </div>
             </div>
         </he-dialog>
+
+        <he-dialog v-model="wxQRCodeVisible" :type="1" :size="['200px', '200px']">
+            <div style="height: 100%;width: 100%" slot="body">
+                <img style="height: 100%;width: 100%" v-if="userData.wxQRCode" :src="userData.wxQRCode"/>
+                <div v-else>没有上传微信二维码</div>
+            </div>
+        </he-dialog>
     </div>
 </template>
 
 <script>
     import {mapGetters,mapActions} from "vuex"
     import moduleTypes from "../store/types"
+    import userApi from "../api/user"
+    import articleApi from "../api/article"
+    import {BASE_URL} from "../config"
     export default {
         name: "Article",
         props: {
-            id: String
+            id: String,
+            userId: String
         },
         data(){
             return {
                 show: false,
 
                 commentsVisible: false,
-                commentContent: ''
+                commentContent: '',
+
+                wxQRCodeVisible: false,
+
+                userData: {
+                    declaration: '想要变得更强吗？来吧，过来吧，少年！！',
+                    username: '临时游客',
+                    post: '登录后生成推广链接'
+                }
             }
         },
         computed: {
             ...mapGetters({
+                // loginUser: moduleTypes.user.GET_LOGIN_USER_DATA,
                 articleData: moduleTypes.article.GET_VIEW_ARTICLE_DATA,
                 articleComments: moduleTypes.comment.GET_ARTICLE_COMMENTS
             })
         },
-        activated(){
-            this.loadArticle();
-        },
-        deactivated(){
-            this.show = false;
-            this.commentsVisible = false;
-            document.title = '推推棒';
-        },
         mounted(){
-
+            this.userId = this.userId==='0'?null:this.userId;
+            this.updateViewsCount({articleId: this.id, userId: this.userId});
+            this.loadArticle();
+            this.loadUserData();
+        },
+        destroyed(){
+            document.title = '推推棒';
         },
         methods: {
             ...mapActions({
                 findById: moduleTypes.article.FIND_ARTICLE_BY_ID,
                 loadArticleComments: moduleTypes.comment.LOAD_ARTICLE_COMMENTS,
-                addArticleComment: moduleTypes.comment.ADD_ARTICLE_COMMENT
+                addArticleComment: moduleTypes.comment.ADD_ARTICLE_COMMENT,
+                updateViewsCount: moduleTypes.article.UPDATE_ARTICLE_VIEWS_COUNT,
+                checkUserCardCount: moduleTypes.article.CHECK_USER_CARD_COUNT
             }),
+            async loadUserData(){
+                if(this.userId){
+                    const user = await userApi.getById(this.userId);
+                    this.userData = user;
+                }
+            },
+            sharePage(){
+                const hrefs = window.location.href.split("#");
+                const shareUrl = BASE_URL + '/article/view?host='+encodeURIComponent(hrefs[0])+'&path='+encodeURIComponent(hrefs[1]);
+
+
+                this.$createToast({
+                    msg: '分享功能暂未开放'
+                }).show();
+            },
+            backToHome(){
+                this.$router.push('/');
+            },
+            goUserEdit(){
+                this.$router.push('/user/edit/0');
+            },
             loadArticle(){
                 const loading = this.$createToast({
                     msg: '正在加载，请稍候...',
@@ -93,9 +147,9 @@
                 });
                 loading.show();
                 this.findById(this.id).then(() => {
-                    document.title = this.articleData.title;
+                    document.title = this.articleData.article.title;
                     setTimeout(() => {
-                        const imgs = this.$el.getElementsByTagName('IMG');
+                        const imgs = this.$el.querySelectorAll('.content IMG')
                         // alert(imgs.length)
                         console.log(imgs)
                         for (let i = 0; i < imgs.length; i++) {
@@ -111,9 +165,13 @@
                 const anchor = this.$el.querySelector(selector) // 参数为要跳转到的元素id
                 document.body.scrollTop = anchor.offsetTop; // chrome
                 document.documentElement.scrollTop = anchor.offsetTop; // firefox
+
+                if(this.id && this.userId) {
+                    this.checkUserCardCount({articleId: this.id, userId: this.userId});
+                }
             },
             showQrCode(){
-
+                this.wxQRCodeVisible = true;
             },
             onCommentClick(){
                 // alert('查看评论')
@@ -129,14 +187,14 @@
                 }
                 await this.addArticleComment(this.commentContent);
                 this.commentContent = '';
-                this.articleData.commentsCount += 1;
+                this.articleData.article.commentsCount += 1;
             },
-            onLike(liked, success, fail){
-                setTimeout(() => {
-                    success();
-                }, 200)
+            async onLike(liked, success, fail){
+                await articleApi.like(this.id, this.userId, liked);
+                success();
             },
-            onCollect(collected, success) {
+            async onCollect(collected, success) {
+                await articleApi.collect(this.id, this.userId, collected);
                 success()
             }
         }
@@ -155,7 +213,16 @@
             .title {
                 font-weight: bold;
                 font-size: 1.5em;
-                margin-bottom: 2em;
+                margin-bottom: 1em;
+            }
+
+            .desc{
+                font-size: 0.9em;
+                color: #aa8888;
+                margin-bottom: 1em;
+                & span:not(:first-child){
+                    margin-left: 5px;
+                }
             }
 
             .user {
@@ -168,6 +235,7 @@
 
                 .ad-words{
                     text-align: left;
+                    word-break: break-all;
                     color: #ef2b30;
                 }
 
@@ -199,21 +267,33 @@
             }
 
             .user-card {
-                margin: 5em 1em;
-                padding: 18px 25px;
+                margin: 5em 1em 0 1em;
+                padding: 10px 25px;
                 border-radius: 5px;
                 border: 0.05em solid #aaaaaa;
                 background: #52b5ad;
                 color: white;
                 .username{
                     text-align: center;
-                    font-size: 1.5em;
+                    font-size: 1.2em;
                     font-weight: bold;
                     color: #2c343c;
                 }
 
+                .avatar{
+                    margin-top: 5px;
+                    width: 100%;
+                    text-align: center;
+                    img{
+                        height: 60px;
+                        width: 60px;
+                        border-radius: 30px;
+
+                    }
+                }
+
                 .jobs{
-                    margin: 10px;
+                    margin: 5px;
                     text-align: center;
                 }
 
@@ -242,6 +322,16 @@
                     }
                 }
             }
+
+            .foot{
+                margin-bottom: 5em;
+                padding: 15px;
+                color: #e86c3a;
+                a{
+                    text-decoration-line: underline;
+                    color: #5c7fff;
+                }
+            }
         }
 
         .comments-body {
@@ -254,6 +344,7 @@
                     color: #a0a0a0;
                     display: flex;
                     justify-content: space-between;
+                    align-items: center;
                     .user{
                         font-weight: bold;
                     }
@@ -265,6 +356,7 @@
                 .content {
                     padding: 10px 0;
                     white-space: pre-line;
+                    word-break: break-all;
                 }
             }
 

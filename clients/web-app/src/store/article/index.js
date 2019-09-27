@@ -2,6 +2,7 @@ import * as types from "./types";
 import moment from "moment";
 
 import articleApi from "../../api/article"
+import moduleTypes from "../types";
 
 const state = {
     resultPage: {},
@@ -10,7 +11,11 @@ const state = {
         lastTime: null,
         position: 0
     },
-    viewArticleData: {}
+    viewArticleDetail: {
+        article: {},
+        liked: false,
+        collected: false
+    }
 }
 
 const getters = {
@@ -31,7 +36,7 @@ const getters = {
         });
     },
     [types.GET_VIEW_ARTICLE_DATA] (state){
-        return state.viewArticleData;
+        return state.viewArticleDetail;
     }
 }
 
@@ -60,8 +65,33 @@ const actions = {
 
     },
     async [types.FIND_ARTICLE_BY_ID]({state}, id){
-        const article = await articleApi.getById(id);
-        state.viewArticleData = article;
+        const result = await articleApi.selectDetailById(id);
+        state.viewArticleDetail = result;
+    },
+    async [types.UPDATE_ARTICLE_VIEWS_COUNT]({state, rootGetters}, {articleId, userId}){
+        const loginUser = rootGetters[moduleTypes.user.GET_LOGIN_USER_DATA];
+        if(loginUser.id && loginUser.id === userId){
+            //自己看自己的推广图文不算
+            userId = null;
+        }
+
+        await articleApi.updateViewsCount(articleId, userId);
+
+        if(state.resultPage.content) {
+            const articles = state.resultPage.content.filter(article => article.id == articleId);
+            // console.log(article)
+            if (articles.length) {
+                articles[0].viewsCount = (articles[0].viewsCount || 0) + 1;
+            }
+        }
+    },
+    async [types.CHECK_USER_CARD_COUNT]({state, rootGetters}, {articleId, userId}){
+        const loginUser = rootGetters[moduleTypes.user.GET_LOGIN_USER_DATA];
+        if(loginUser.id && loginUser.id === userId){
+            //自己看自己的推广图文不算
+            userId = null;
+        }
+        await articleApi.checkUserCardCount(articleId, userId);
     }
 }
 

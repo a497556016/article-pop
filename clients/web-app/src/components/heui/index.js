@@ -1,6 +1,7 @@
 import TitleBar from "./base/TitleBar"
 import Panel from "./base/Panel";
 import List from "./base/List";
+import ListItem from "./base/ListItem";
 import ToolBar from "./base/ToolBar";
 import Button from "./base/Button";
 
@@ -22,6 +23,7 @@ export const components = [
     TitleBar,
     Panel,
     List,
+    ListItem,
     ToolBar,
     Button,
 

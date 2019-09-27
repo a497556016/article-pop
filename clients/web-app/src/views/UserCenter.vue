@@ -15,11 +15,11 @@
                     </div>
                     <div class="r">
                         <div class="login" v-if="!userData.id" @click="toLogin">点击登录</div>
-                        <template v-else>
+                        <div v-else>
                             <div>{{userData.company}}</div>
                             <div>{{userData.post}}</div>
-                        </template>
-                        <div style="margin-top: 15px;color: #3ab566">{{userData.declaration}}</div>
+                            <div style="color: #3ab566;margin-top: 10px;word-break: break-all;">{{userData.declaration}}</div>
+                        </div>
                     </div>
                     <div class="ac" @click="toEditUser"><i class="fa fa-angle-right"></i></div>
                 </div>
@@ -27,11 +27,7 @@
 
             <he-panel>
                 <he-list :data="actions">
-                    <div style="display: flex;color: #362e44" slot="item" slot-scope="{item}">
-                        <div :style="{color: item.color, marginTop: '1px', fontSize: '1.2em'}"><i :class="[item.icon]"></i></div>
-                        <div style="flex: 1;margin-left: 1.5em">{{item.label}}</div>
-                        <div class="ac"><i class="fa fa-angle-right"></i></div>
-                    </div>
+                    <he-list-item slot="item" slot-scope="{item}" @click="itemClick(item)" :data="item"></he-list-item>
                 </he-list>
             </he-panel>
         </div>
@@ -46,9 +42,9 @@
         data(){
             return {
                 actions: [
-                    {icon: 'fa fa-star', color: '#4288ff', label: '收藏'},
-                    {icon: 'fa fa-heart', color: '#ff5956', label: '点赞'},
-                    {icon: 'fa fa-cog', color: '#47e3b4', label: '设置'}
+                    {icon: 'fa fa-star', iconColor: '#4288ff', label: '收藏'},
+                    {icon: 'fa fa-heart', iconColor: '#ff5956', label: '点赞'},
+                    {icon: 'fa fa-cog', iconColor: '#47e3b4', label: '设置'}
                 ]
             }
         },
@@ -59,10 +55,18 @@
         },
         methods: {
             toEditUser(){
-                this.$router.push('/user/edit')
+                this.$router.push('/user/edit/'+(this.userData.id||'0'))
             },
             toLogin(){
                 this.$router.push('/user/login')
+            },
+            itemClick(item){
+                switch (item.label) {
+                    default: break;
+                    case '设置':
+                        this.$router.push('/setting')
+                        break;
+                }
             }
         }
     }
@@ -84,7 +88,7 @@
         .he-body {
             .he-panel{
                 margin-bottom: 1em;
-                padding: 1em;
+                padding: 0.5em;
             }
 
             .user-info {
@@ -98,6 +102,7 @@
                         height: 80px;
                         width: 80px;
                         border: 0.05em solid #efefef;
+                        text-align: center;
                         img{
                             width: 100%;
                             height: 100%;

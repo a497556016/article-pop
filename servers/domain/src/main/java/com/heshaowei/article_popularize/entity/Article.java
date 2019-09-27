@@ -25,7 +25,10 @@ public class Article {
     private Date date;
     private String tag;
     private String chineseTag;
-    private long commentsCount;
+    private Long commentsCount;
+    private Long viewsCount;
+    private Long likesCount;
+    private Long collectsCount;
     private Date lastModified;
 
     @Data

@@ -5,6 +5,14 @@ import userApi from "../../api/user"
 
 const STORAGE_USER_KEY = "storage_user_key";
 
+const defaultUser = {
+    avatar: require("../../assets/user.png"),
+    username: "临时游客",
+    company: "未填写公司信息",
+    post: "未填写职位",
+    declaration: "我们的征途是星辰大海。"
+}
+
 const state = {
     userData: {
         id: null,
@@ -23,13 +31,7 @@ const getters = {
            state.userData = JSON.parse(json);
        }
        if(!state.userData.id){
-           return {
-               avatar: require("../../assets/logo.png"),
-               username: "临时游客",
-               company: "未填写公司信息",
-               post: "未填写职位",
-               declaration: "我们的征途是星辰大海。"
-           }
+           return Object.assign({}, defaultUser);;
        }
        return state.userData;
    }
@@ -39,6 +41,10 @@ const mutations = {
     [types.SET_LOGIN_USER_DATA] (state, user){
         state.userData = user;
         localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(user));
+    },
+    [types.LOGOUT](state){
+        state.userData = Object.assign({}, defaultUser);
+        localStorage.removeItem(STORAGE_USER_KEY);
     }
 }
 

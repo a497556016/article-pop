@@ -1,6 +1,6 @@
 <template>
     <div class="he-textarea" :style="{height: height}">
-        <textarea v-model="text" @focus="height = '4em'" @blur="onBlur" :placeholder="options.placeholder"></textarea>
+        <textarea v-model="text" @focus="height = '4em'" @blur="onBlur" :placeholder="config.placeholder"></textarea>
     </div>
 </template>
 
@@ -12,9 +12,7 @@
             options: {
                 type: Object,
                 default(){
-                    return {
-                        placeholder: 'please type...'
-                    }
+                    return {}
                 }
             }
         },
@@ -26,6 +24,13 @@
             return {
                 height: '2em',
                 text: this.value
+            }
+        },
+        computed: {
+            config(){
+                return Object.assign({
+                    placeholder: 'please type...'
+                }, this.options)
             }
         },
         watch: {

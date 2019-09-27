@@ -35,10 +35,16 @@
     font-size: 0.6em;
     color: @text-third-color;
     .l{
-
+      span:not(:first-child){
+        margin-left: 5px;
+      }
     }
     .r{
-
+      span:not(:first-child){
+        margin-left: 5px;
+        padding-left: 5px;
+        border-left: 0.01em solid @gray-light;
+      }
     }
   }
 }

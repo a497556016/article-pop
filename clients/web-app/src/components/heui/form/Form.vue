@@ -49,7 +49,16 @@
                     const rules = field.rules;
                     if(rules){
                         const value = this.data[field.name];
-                        if(rules.required && !value){
+                        if(rules.check){
+                            const result = rules.check(value);
+                            if(result === false){
+                                valid = false;
+                                errMsg += (rules.message || (field.label+'验证失败！'))
+                            }else if(typeof result === 'string'){
+                                valid = false;
+                                errMsg += result;
+                            }
+                        }else if(rules.required && !value){
                             valid = false;
                             errMsg += (rules.message || (field.label+'不能为空！'))
                         }else if(rules.maxLength !== 'undefined' && value.length > rules.maxLength){

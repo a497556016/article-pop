@@ -23,7 +23,41 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody User user){
-        user = this.userRepository.save(user);
+        if(null != user.getId()){
+            User update = this.userRepository.findById(user.getId()).orElse(null);
+            if(null != update) {
+                if(StringUtils.isNotBlank(user.getAvatar())) {
+                    update.setAvatar(user.getAvatar());
+                }
+                if(StringUtils.isNotBlank(user.getWxQRCode())){
+                    update.setWxQRCode(user.getWxQRCode());
+                }
+                if(StringUtils.isNotBlank(user.getPassword())) {
+                    update.setPassword(user.getPassword());
+                }
+                if(StringUtils.isNotBlank(user.getUsername())){
+                    update.setUsername(user.getUsername());
+                }
+                if(StringUtils.isNotBlank(user.getCompany())){
+                    update.setCompany(user.getCompany());
+                }
+                if(StringUtils.isNotBlank(user.getPost())){
+                    update.setPost(user.getPost());
+                }
+                if(StringUtils.isNotBlank(user.getPhone())){
+                    update.setPhone(user.getPhone());
+                }
+                if(StringUtils.isNotBlank(user.getEmail())){
+                    update.setEmail(user.getEmail());
+                }
+                if(StringUtils.isNotBlank(user.getDeclaration())){
+                    update.setDeclaration(user.getDeclaration());
+                }
+                user = this.userRepository.save(update);
+            }
+        }else {
+            user = this.userRepository.save(user);
+        }
 
         return ResponseEntity.ok(user);
     }

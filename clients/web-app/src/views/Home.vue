@@ -12,7 +12,8 @@
                         <span v-if="metadata.chineseTag">标签：{{metadata.chineseTag}}</span>
                     </div>
                     <div slot="footer-right" slot-scope="{metadata}">
-                        {{metadata.date}}
+                        <span>阅读：{{metadata.viewsCount||0}}</span>
+                        <span>{{metadata.date.length > 16 ? metadata.date.substring(0, 16) : metadata.date}}</span>
                     </div>
                 </he-article-list>
             </he-panel>
@@ -45,6 +46,7 @@
         },
         computed: {
             ...mapGetters({
+                userData: moduleTypes.user.GET_LOGIN_USER_DATA,
                 haveMore: moduleTypes.article.HAVE_MORE_PAGES,
                 recommendList: moduleTypes.article.GET_RECOMMEND_LIST
             })
@@ -72,13 +74,16 @@
             },
             onItemClick(article) {
                 console.log(article)
+
+                const path = '/article/'+article.metadata.id+'/'+(this.userData.id||0);
+
                 this.$router.push({
-                    path: '/article/'+article.metadata.id
+                    path
                 })
             },
             async loadMore(){
-                await this.loadNextPage(this.tagsData[this.activeTagIndex].tag);
                 this.$refs.body.scrollTo(0, 0);
+                await this.loadNextPage(this.tagsData[this.activeTagIndex].tag);
             },
             gotoUserCenter(){
                 this.$router.push("/user")
