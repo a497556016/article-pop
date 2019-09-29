@@ -41,34 +41,34 @@
                     <a @click="goUserEdit">点这里立刻注册</a>
                 </div>
             </div>
+
+            <he-dialog ref="commentsDialog" v-model="commentsVisible" :header="{title: '评论详情'}">
+                <div class="comments-body" slot="body">
+                    <div v-if="articleComments.length == 0" align="center" style="color: #aaaaaa">还没有人评论</div>
+                    <div v-else class="comment" v-for="comment in articleComments">
+                        <div class="info">
+                            <div class="user">来自 {{comment.username}} 的评论 </div>
+                            <div class="date">{{comment.date}}</div>
+                        </div>
+                        <div class="content">{{comment.content}}</div>
+                    </div>
+                    <div class="footer">
+                        <textarea class="input" v-model="commentContent" placeholder="添加评论"></textarea>
+                        <a @click="addComment">发布</a>
+                    </div>
+                </div>
+            </he-dialog>
+
+            <he-dialog v-model="wxQRCodeVisible" :type="1" :size="['200px', '200px']">
+                <div style="height: 100%;width: 100%" slot="body">
+                    <img style="height: 100%;width: 100%" v-if="userData.wxQRCode" :src="userData.wxQRCode"/>
+                    <div v-else>没有上传微信二维码</div>
+                </div>
+            </he-dialog>
         </template>
         <template slot="footer">
-            <he-comment-bar :liked="articleData.liked" :collected="articleData.collected" @clickComment="onCommentClick" :comments-count="articleData.article.commentsCount" @like="onLike" @collect="onCollect"></he-comment-bar>
+            <he-comment-bar :liked="articleData.liked" :collected="articleData.collected" @clickComment="onCommentClick" :comments-count="articleData.article.commentsCount||0" @like="onLike" @collect="onCollect"></he-comment-bar>
         </template>
-
-        <he-dialog ref="commentsDialog" v-model="commentsVisible" :header="{title: '评论详情'}">
-            <div class="comments-body" slot="body">
-                <div v-if="articleComments.length == 0" align="center" style="color: #aaaaaa">还没有人评论</div>
-                <div v-else class="comment" v-for="comment in articleComments">
-                    <div class="info">
-                        <div class="user">来自 {{comment.username}} 的评论 </div>
-                        <div class="date">{{comment.date}}</div>
-                    </div>
-                    <div class="content">{{comment.content}}</div>
-                </div>
-                <div class="footer">
-                    <textarea class="input" v-model="commentContent" placeholder="添加评论"></textarea>
-                    <a @click="addComment">发布</a>
-                </div>
-            </div>
-        </he-dialog>
-
-        <he-dialog v-model="wxQRCodeVisible" :type="1" :size="['200px', '200px']">
-            <div style="height: 100%;width: 100%" slot="body">
-                <img style="height: 100%;width: 100%" v-if="userData.wxQRCode" :src="userData.wxQRCode"/>
-                <div v-else>没有上传微信二维码</div>
-            </div>
-        </he-dialog>
     </he-page>
 </template>
 

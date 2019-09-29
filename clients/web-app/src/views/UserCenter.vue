@@ -45,6 +45,7 @@
                     {icon: 'fa fa-star', iconColor: '#4288ff', label: '收藏'},
                     {icon: 'fa fa-heart', iconColor: '#ff5956', label: '点赞'},
                     {icon: 'fa fa-cube', iconColor: '#8bff82', label: '数据'},
+                    {icon: 'fa fa-list', iconColor: '#fc50ff', label: '浏览记录'},
                     {icon: 'fa fa-cog', iconColor: '#47e3b4', label: '设置'}
                 ]
             }
@@ -76,6 +77,12 @@
                         break;
                     case '点赞':
                         this.$router.push('/user/like/'+this.userData.id)
+                        break;
+                    case '浏览记录':
+                        this.$router.push('/user/views_record/'+this.userData.id)
+                        break;
+                    case '数据':
+                        this.$createToast('我太懒了，这个模块不想做了！').show();
                         break;
                 }
             }

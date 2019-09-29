@@ -1,17 +1,23 @@
 package com.heshaowei.article_popularize.metadata.article.controller;
 
 import com.heshaowei.article_popularize.common.exception.ErrorMessageException;
+import com.heshaowei.article_popularize.entity.SimpleArticle;
 import com.heshaowei.article_popularize.entity.User;
 import com.heshaowei.article_popularize.metadata.article.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -20,6 +26,8 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @PostMapping
     public ResponseEntity<User> save(@RequestBody User user){
@@ -79,5 +87,35 @@ public class UserController {
     public ResponseEntity<User> getById(@PathVariable("id") String id){
         User user = this.userRepository.findById(new ObjectId(id)).orElse(new User());
         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/deleteLikedArticle/{userId}/{articleId}")
+    public ResponseEntity deleteLikedArticle(@NotBlank @PathVariable("userId") String userId, @NotBlank @PathVariable("articleId") String articleId){
+        User user = this.userRepository.findById(new ObjectId(userId)).orElse(null);
+        if(null == user) {
+            throw new ErrorMessageException("用户不存在！");
+        }
+        List<SimpleArticle> articles = user.getLikedArticles().stream().filter(simpleArticle -> articleId.equals(simpleArticle.getArticleId().toHexString())).collect(Collectors.toList());
+        if(null != articles) {
+            user.getLikedArticles().removeAll(articles);
+        }
+        this.userRepository.save(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/deleteCollectedArticle/{userId}/{articleId}")
+    public ResponseEntity deleteCollectedArticle(@NotBlank @PathVariable("userId") String userId, @NotBlank @PathVariable("articleId") String articleId){
+        User user = this.userRepository.findById(new ObjectId(userId)).orElse(null);
+        if(null == user) {
+            throw new ErrorMessageException("用户不存在！");
+        }
+        List<SimpleArticle> articles = user.getCollectedArticles().stream().filter(simpleArticle -> articleId.equals(simpleArticle.getArticleId().toHexString())).collect(Collectors.toList());
+        if(null != articles) {
+            user.getCollectedArticles().removeAll(articles);
+        }
+        this.userRepository.save(user);
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,9 +1,9 @@
 <template>
-    <he-page class="home" :header="true">
-        <div slot="header">
+    <he-page ref="page" class="home" :header="true">
+        <template slot="header">
             <he-title-bar title="I推广" :left="{back: false}" :right="{icon: 'fa fa-user'}" @rightClick="gotoUserCenter"></he-title-bar>
-        </div>
-        <div slot="body">
+        </template>
+        <template slot="body">
             <he-scroll-nav-bar style="position: fixed;top: 4em;left: 0.5em;right: 0.5em;z-index: 999;" :data="tagsData" :active-index="activeTagIndex" @change="onTagsChange">
                 <div slot-scope="{item}">{{item.label}}</div>
             </he-scroll-nav-bar>
@@ -21,12 +21,12 @@
                     </he-article-list>
                 </he-panel>
             </div>
-        </div>
+        </template>
     </he-page>
 </template>
 
 <script>
-    import {mapGetters,mapActions} from "vuex"
+    import {mapGetters,mapActions,mapMutations} from "vuex"
     import moduleTypes from "../store/types"
 
     export default {
@@ -71,6 +71,9 @@
                 selectArticleList: moduleTypes.article.SELECT_ARTICLE_PAGE_DATA,
                 loadNextPage: moduleTypes.article.SELECT_NEXT_ARTICLE_PAGE_DATA
             }),
+            ...mapMutations({
+                addHistoryRecord: moduleTypes.article.ADD_HISTORY_VIEW_RECORDS
+            }),
             onTagsChange(item, index){
                 console.log(item, index)
                 this.activeTagIndex = index;
@@ -83,10 +86,13 @@
 
                 this.$router.push({
                     path
-                })
+                });
+
+                this.addHistoryRecord(article.metadata);
             },
             async loadMore(){
-                this.$refs.body.scrollTo(0, 0);
+                console.log(this.$refs.page)
+                this.$refs.page.$children[1].$el.scrollTo(0, 0);
                 await this.loadNextPage(this.tagsData[this.activeTagIndex].tag);
             },
             gotoUserCenter(){

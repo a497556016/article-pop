@@ -3,7 +3,7 @@
         <he-title-bar slot="header" title="我的点赞记录"></he-title-bar>
         <div slot="body">
             <he-panel>
-                <he-article-list v-if="likes.length" :data="likes" @itemClick="onArticleClick"></he-article-list>
+                <he-article-list v-if="likes.length" :data="likes" :options="{footerHidden: true, actions: ['删除']}" @clickActionsItem="clickActionsItem" @itemClick="onArticleClick"></he-article-list>
                 <he-alert v-else type="normal">还没有点赞任何文章哟</he-alert>
             </he-panel>
         </div>
@@ -29,7 +29,7 @@
         methods: {
             async loadUserData(){
                 const user = await userApi.getById(this.id);
-                this.collects = user.likedArticles.map(article => {
+                this.likes = user.likedArticles.map(article => {
                     return {
                         title: article.title,
                         content: article.abstractText,
@@ -43,6 +43,13 @@
                 this.$router.push({
                     path
                 })
+            },
+            async clickActionsItem(label, data){
+                if(label == '删除'){
+                    await userApi.deleteLikedArticle(this.id, data.metadata.articleId)
+                    // this.$createToast(`删除文章[${data.title}]`).show();
+                    this.loadUserData();
+                }
             }
         }
     }

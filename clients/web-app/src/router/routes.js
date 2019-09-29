@@ -22,6 +22,11 @@ export default [
         component: () => import("@/views/UserLike"),
         props: (router) => ({id: router.params.id})
     },
+    {
+        path: '/user/views_record/:id',
+        component: () => import("@/views/UserViewsRecord"),
+        props: (router) => ({id: router.params.id})
+    },
     {path: '/user/login', component: () => import("@/views/Login")},
     {path: '/setting', component: () => import("@/views/Setting")}
 ]

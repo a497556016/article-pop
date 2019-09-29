@@ -4,6 +4,8 @@ import moment from "moment";
 import articleApi from "../../api/article"
 import moduleTypes from "../types";
 
+const HISTORY_VIEW_RECORDS = "HISTORY_VIEW_RECORDS";
+
 const state = {
     resultPage: {},
     loadMore: {
@@ -15,7 +17,9 @@ const state = {
         article: {},
         liked: false,
         collected: false
-    }
+    },
+
+    historyViewRecords: []
 }
 
 const getters = {
@@ -30,17 +34,41 @@ const getters = {
             return {
                 title: item.title,
                 content: item.abstractText,
-                image: item.cover,
+                image: item.cover.startsWith('//')?("https:"+item.cover):item.cover,
                 metadata: item
             }
         });
     },
     [types.GET_VIEW_ARTICLE_DATA] (state){
         return state.viewArticleDetail;
+    },
+    [types.GET_HISTORY_VIEW_RECORDS](state){
+        if(!state.historyViewRecords || state.historyViewRecords.length === 0){
+            const json = localStorage.getItem(HISTORY_VIEW_RECORDS);
+            if(json) {
+                state.historyViewRecords = JSON.parse(json);
+            }
+        }
+        return state.historyViewRecords.reverse();
     }
 }
 
-const mutations = {}
+const mutations = {
+    [types.ADD_HISTORY_VIEW_RECORDS] (state, article){
+        state.historyViewRecords.push({
+            id: article.id,
+            title: article.title,
+            content: article.abstractText,
+            image: article.cover.startsWith('//')?("https:"+article.cover):article.cover,
+            time: new Date().getTime(),
+        });
+        if(state.historyViewRecords.length > 20){
+            state.historyViewRecords.splice(0, 20-state.historyViewRecords.length)
+        }
+        const json = JSON.stringify(state.historyViewRecords);
+        localStorage.setItem(HISTORY_VIEW_RECORDS, json);
+    }
+}
 
 const actions = {
     async [types.SELECT_ARTICLE_PAGE_DATA]({state}, tag){

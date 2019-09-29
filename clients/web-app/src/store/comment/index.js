@@ -19,13 +19,13 @@ const actions = {
     async [types.LOAD_ARTICLE_COMMENTS] ({state, rootGetters}){
         console.log(rootGetters);
         const article = rootGetters[moduleTypes.article.GET_VIEW_ARTICLE_DATA];
-        const page = await commentApi.queryArticleComments(article.id);
+        const page = await commentApi.queryArticleComments(article.article.id);
         state.articleComments = page.content;
     },
     async [types.ADD_ARTICLE_COMMENT] ({state, rootGetters}, commentContent) {
         const article = rootGetters[moduleTypes.article.GET_VIEW_ARTICLE_DATA];
         const userData = rootGetters[moduleTypes.user.GET_LOGIN_USER_DATA];
-        const comment = await commentApi.addArticleComment(article.id, commentContent, userData.username);
+        const comment = await commentApi.addArticleComment(article.article.id, commentContent, userData.username);
         state.articleComments = [comment].concat(state.articleComments);
     }
 }

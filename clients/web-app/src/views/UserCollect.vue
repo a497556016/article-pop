@@ -3,7 +3,7 @@
         <he-title-bar slot="header" title="我的收藏目录"></he-title-bar>
         <div slot="body">
             <he-panel>
-                <he-article-list v-if="collects.length" :data="collects" @itemClick="onArticleClick"></he-article-list>
+                <he-article-list v-if="collects.length" :data="collects" :options="{footerHidden: true, actions: ['删除']}" @clickActionsItem="clickActionsItem" @itemClick="onArticleClick"></he-article-list>
                 <he-alert v-else>还没有收藏任何文章哟</he-alert>
             </he-panel>
         </div>
@@ -43,6 +43,13 @@
                 this.$router.push({
                     path
                 })
+            },
+            async clickActionsItem(label, data){
+                if(label == '删除'){
+                    await userApi.deleteCollectedArticle(this.id, data.metadata.articleId)
+                    // this.$createToast(`删除文章[${data.title}]`).show();
+                    this.loadUserData();
+                }
             }
         }
     }

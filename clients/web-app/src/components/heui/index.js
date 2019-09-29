@@ -73,6 +73,9 @@ const install = function (Vue) {
 
     Vue.prototype.$createToast = function (options) {
         Vue.prototype.$toast.hide();
+        if(typeof options === 'string'){
+            options = {msg: options}
+        }
         return Vue.prototype.$toast.init(options);
     }
 }

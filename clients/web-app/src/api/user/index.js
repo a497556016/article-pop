@@ -11,5 +11,11 @@ export default {
         return http.get('/user/loginWithPwd', {
             params: {username, password}
         })
+    },
+    deleteLikedArticle(userId, articleId){
+        return http.put('/user/deleteLikedArticle/'+userId+'/'+articleId);
+    },
+    deleteCollectedArticle(userId, articleId){
+        return http.put('/user/deleteCollectedArticle/'+userId+'/'+articleId);
     }
 }

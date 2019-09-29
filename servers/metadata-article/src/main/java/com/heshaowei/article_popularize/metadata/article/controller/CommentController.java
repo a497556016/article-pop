@@ -27,7 +27,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<Comment> add(@RequestBody Comment comment){
         Article article = this.articleRepository.findById(comment.getArticleId()).orElse(new Article());
-        article.setCommentsCount(article.getCommentsCount()+1);
+        article.setCommentsCount(article.getCommentsCount()==null?1:(article.getCommentsCount()+1));
         this.articleRepository.save(article);
 
         comment.setDate(new Date());
