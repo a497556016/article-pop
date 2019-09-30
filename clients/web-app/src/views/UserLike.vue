@@ -28,14 +28,16 @@
         },
         methods: {
             async loadUserData(){
-                const user = await userApi.getById(this.id);
-                this.likes = user.likedArticles.map(article => {
-                    return {
-                        title: article.title,
-                        content: article.abstractText,
-                        metadata: article
-                    }
-                });
+                const {likedArticles} = await userApi.getById(this.id);
+                if(likedArticles) {
+                    this.likes = likedArticles.map(article => {
+                        return {
+                            title: article.title,
+                            content: article.abstractText,
+                            metadata: article
+                        }
+                    });
+                }
             },
             onArticleClick(article){
                 const path = '/article/'+article.metadata.articleId+'/'+this.id;

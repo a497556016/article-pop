@@ -42,7 +42,8 @@
         },
         data(){
             return {
-                visible: this.value
+                visible: this.value,
+                animation: 'dialog-move-up 0.25s'
             }
         },
         computed: {
@@ -59,8 +60,8 @@
                 }
                 return {
                     zIndex: 999,
-                    animation: 'dialog-move-up 0.3s',
-                    webkitAnimation: 'dialog-move-up 0.3s' /*Safari and Chrome*/
+                    animation: this.animation,
+                    webkitAnimation: this.animation /*Safari and Chrome*/
                 }
             }
         },
@@ -80,7 +81,7 @@
         },
         methods: {
             close(){
-                this.visible = false
+                this.visible = false;
             }
         }
     }

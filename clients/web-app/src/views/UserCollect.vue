@@ -28,14 +28,16 @@
         },
         methods: {
             async loadUserData(){
-                const user = await userApi.getById(this.id);
-                this.collects = user.collectedArticles.map(article => {
-                    return {
-                        title: article.title,
-                        content: article.abstractText,
-                        metadata: article
-                    }
-                });
+                const {collectedArticles} = await userApi.getById(this.id);
+                if(collectedArticles) {
+                    this.collects = collectedArticles.map(article => {
+                        return {
+                            title: article.title,
+                            content: article.abstractText,
+                            metadata: article
+                        }
+                    });
+                }
             },
             onArticleClick(article){
                 const path = '/article/'+article.metadata.articleId+'/'+this.id;

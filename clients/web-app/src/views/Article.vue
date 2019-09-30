@@ -191,6 +191,10 @@
                     }).show();
                     return;
                 }
+                if(!this.commentContent){
+                    this.$createToast({type: 'error', msg: '评论不能为空！'}).show();
+                    return ;
+                }
                 await this.addArticleComment(this.commentContent);
                 this.commentContent = '';
                 this.articleData.article.commentsCount += 1;

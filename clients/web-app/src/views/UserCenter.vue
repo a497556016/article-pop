@@ -70,7 +70,7 @@
                 switch (item.label) {
                     default: break;
                     case '设置':
-                        this.$router.push('/setting')
+                        this.$router.push('/user/setting')
                         break;
                     case '收藏':
                         this.$router.push('/user/collect/'+this.userData.id)

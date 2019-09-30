@@ -51,8 +51,9 @@
     .login {
         background: white;
         height: 100%;
-        padding: 25px;
+
         .login-panel{
+            margin: 25px;
             position: relative;
             top: 30%;
             transform: translateY(-50%);

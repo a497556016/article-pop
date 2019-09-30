@@ -12,9 +12,23 @@
   to {top:2em;}
 }
 
+@keyframes dialog-move-down
+{
+  from {top:2em;}
+  to {top:calc(100vh);}
+}
+
+@-webkit-keyframes dialog-move-down /*Safari and Chrome*/
+{
+  from {top:2em;}
+  to {top:calc(100vh);}
+}
+
 .he-dialog{
 
   .he-dialog-body {
+    will-change: transform;
+    transition: all 300ms;
     position: fixed;
     top: 2em;
     bottom: 0;

@@ -56,13 +56,13 @@
             })
         },
         activated(){
-            // console.log(this.scrollTop)
-            this.$refs.body.scrollTo(0, this.scrollTop)
+            console.log(this.scrollTop)
+            this.$refs.page.$children[1].$el.scrollTo(0, this.scrollTop)
         },
         mounted(){
             this.selectArticleList(this.tagsData[this.activeTagIndex].tag);
-            this.$refs.body.onscroll = (e) => {
-                // console.log(e.target.scrollTop)
+            this.$refs.page.$children[1].$el.onscroll = (e) => {
+                console.log(e.target.scrollTop)
                 this.scrollTop = e.target.scrollTop;
             }
         },

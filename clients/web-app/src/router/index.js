@@ -19,7 +19,33 @@ const router = new VueRouter({
     }*/
 })
 
+/**
+ * 监听返回事件
+ */
+window.addEventListener("popstate", function(e) {
+    router.isBack = true;
+}, false);
+/**
+ * 重写返回方法
+ */
+VueRouter.prototype.go = function(location){
+    this.isBack = true;
+    window.history.go(-1);
+}
+
+router.beforeResolve((to, from, next) => {
+    console.log('resolve router');
+    if(router.isBack){
+        to.meta.transitionName = 'slide-right';
+    }else {
+        to.meta.transitionName = 'slide-left';
+    }
+    router.isBack = false;
+    next()
+})
+
 router.beforeEach((to, from, next) => {
+    console.log('each router')
     // ...
     console.log(location)
     console.log(`切换路由从`,from,`到`,to);

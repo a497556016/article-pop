@@ -52,7 +52,7 @@
             init(options){
                 this.msg = options.msg || '';
                 this.mask = options.mask || false;
-                this.time = options.time || 2000;
+                this.time = options.time || 3000;
                 this.type = options.type || 'text';
                 this.position = options.position || 'center';
                 return this;
