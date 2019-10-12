@@ -53,6 +53,12 @@ const mutations = {
 
 const actions = {
     async [types.SAVE_USER]({state, commit}, user){
+        if (!user.collectedArticles){
+            delete user.collectedArticles;
+        }
+        if (!user.likedArticles){
+            delete user.likedArticles;
+        }
         const re = await userApi.save(user);
         commit(types.SET_LOGIN_USER_DATA, re);
     },
